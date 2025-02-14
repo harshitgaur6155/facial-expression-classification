@@ -8,7 +8,7 @@ __version__ = "0.0.0"
 
 REPO_NAME = "facial-expression-classification"
 AUTHOR_USER_NAME = "harshitgaur6155"
-SRC_REPO = "facial-expression-classification"
+SRC_REPO = "facialExpressionClassify"
 AUTHOR_EMAIL = "harshit.gaur6155@gmail.com"
 
 
