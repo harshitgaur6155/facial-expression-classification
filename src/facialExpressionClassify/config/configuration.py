@@ -3,7 +3,7 @@ from facialExpressionClassify.constants import *
 from facialExpressionClassify import logger
 from facialExpressionClassify.utils.common import read_yaml, create_directories
 from facialExpressionClassify.entity.config_entity import (
-    DataIngestionConfig, PrepareBaseModelConfig, PrepareCallbacksConfig, ModelTrainingConfig, ModelEvaluationConfig
+    DataIngestionConfig, PrepareBaseModelConfig, PrepareCallbacksConfig, ModelTrainingConfig, ModelEvaluationConfig, ModelPredictionConfig
 )
 
 
@@ -79,7 +79,8 @@ class ConfigurationManager:
         training = self.config.training
         prepare_base_model = self.config.prepare_base_model
         params = self.params
-        training_data = os.path.join(self.config.data_ingestion.unzip_dir, "labeled_data")
+        # training_data = os.path.join(self.config.data_ingestion.unzip_dir, self.config.data_ingestion.train_test_data)
+        training_data = self.config.data_ingestion.unzip_dir
         create_directories([
             Path(training.root_dir)
         ])
@@ -101,7 +102,8 @@ class ConfigurationManager:
 
     def get_validation_config(self) -> ModelEvaluationConfig:
         training = self.config.training
-        training_data = os.path.join(self.config.data_ingestion.unzip_dir, "labeled_data")
+        # training_data = os.path.join(self.config.data_ingestion.unzip_dir, self.config.data_ingestion.train_test_data)
+        training_data = self.config.data_ingestion.unzip_dir
         create_directories([
             Path(training.root_dir)
         ])
@@ -118,4 +120,13 @@ class ConfigurationManager:
 
 
 
-      
+    def get_prediction_config(self) -> ModelPredictionConfig:
+        training = self.config.training
+
+        create_directories([training.root_dir])
+
+        predict_config = ModelPredictionConfig(
+            path_of_model=Path(training.trained_model_path),
+        )
+
+        return predict_config

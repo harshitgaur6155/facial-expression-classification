@@ -48,3 +48,8 @@ class ModelEvaluationConfig:
     all_params: dict
     params_image_size: list
     params_batch_size: int
+
+
+@dataclass(frozen=True)
+class ModelPredictionConfig:
+    path_of_model: Path
