@@ -1,6 +1,6 @@
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras.preprocessing import image
+from tensorflow.keras.preprocessing import image # type: ignore
 import os
 from facialExpressionClassify.constants import *
 from facialExpressionClassify.utils.common import read_yaml

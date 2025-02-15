@@ -4,7 +4,11 @@ from zipfile import ZipFile
 import tensorflow as tf
 import time
 from pathlib import Path
+from facialExpressionClassify import logger
 from facialExpressionClassify.entity.config_entity import ModelTrainingConfig
+import collections
+import numpy as np
+from sklearn.utils.class_weight import compute_class_weight # type: ignore
 
 
 
@@ -31,7 +35,9 @@ class Training:
         dataflow_kwargs = dict(
             target_size=self.config.params_image_size[:-1],
             batch_size=self.config.params_batch_size,
-            interpolation="bilinear"
+            interpolation="bilinear",
+            # class_mode="sparse",  ## When to use Label (Integer) Encoding
+            class_mode="categorical" ## Default in params --> When to use One-Hot Encoding of the classes.
         )
 
         valid_datagenerator = tf.keras.preprocessing.image.ImageDataGenerator(
@@ -64,6 +70,34 @@ class Training:
             shuffle=True,
             **dataflow_kwargs
         )
+
+        # for i, (batch_images, batch_labels) in enumerate(self.train_generator):
+        #     logger.info(f"Batch {i+1}: Images Shape: {batch_images.shape}")
+        #     logger.info(f"Batch {i+1}: Labels: {batch_labels}")
+
+        #     # Stop after one full epoch to avoid an infinite loop
+        #     if i >= len(self.train_generator):
+        #         break
+
+        counter = collections.Counter(self.train_generator.classes)
+        logger.info(f"Class distribution: {counter}")
+        logger.info(f"Train Generator Batch Size: {self.train_generator.batch_size}")
+        logger.info(f"Validation Generator Batch Size: {self.valid_generator.batch_size}")
+
+        # **NEW CODE**: Compute class weights
+        class_labels = np.unique(self.train_generator.classes)  # Get unique class labels
+        class_samples = [list(self.train_generator.classes).count(i) for i in class_labels]  # Count samples per class
+
+        class_weights = compute_class_weight(
+            'balanced', 
+            classes=class_labels, 
+            y=np.concatenate([np.full(n, i) for i, n in enumerate(class_samples)])
+        )
+        self.class_weights_dict = dict(zip(class_labels, class_weights))  # Create class weight dictionary
+
+        logger.info(f"Class weights: {self.class_weights_dict}")  # Log class weights
+
+
     
     
     
@@ -89,8 +123,11 @@ class Training:
             steps_per_epoch=self.steps_per_epoch,
             validation_steps=self.validation_steps,
             validation_data=self.valid_generator,
-            callbacks=callback_list
+            callbacks=callback_list,
+            class_weight=self.class_weights_dict  # Pass the class weights to fit
         )
+
+        logger.info(self.model.summary())
 
         self.save_model(
             path=self.config.trained_model_path,

@@ -1,5 +1,7 @@
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Optional
+
 
 
 @dataclass(frozen=True)
@@ -20,6 +22,7 @@ class PrepareBaseModelConfig:
     params_include_top: bool
     params_weights: str
     params_classes: int
+    freeze_layers_till: Optional[int]
 
 
 @dataclass(frozen=True)

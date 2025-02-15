@@ -1,0 +1,46 @@
+schema: '2.0'
+stages:
+  data_ingestion:
+    cmd: python src/facialExpressionClassify/pipeline/stage_01_data_ingestion.py
+    deps:
+    - path: config/config.yaml
+      hash: md5
+      md5: c2e2cd7e32c44ea71e9daf96dc864cf9
+      size: 740
+    - path: src/facialExpressionClassify/pipeline/stage_01_data_ingestion.py
+      hash: md5
+      md5: 0b0e945dd9d00cf2490c6710abdb1e74
+      size: 914
+    outs:
+    - path: artifacts/data_ingestion/labeled_data
+      hash: md5
+      md5: c9716c8e10f4f7d4e669a0de7661862b.dir
+      size: 329299761
+      nfiles: 29043
+  prepare_base_model:
+    cmd: python src/facialExpressionClassify/pipeline/stage_02_prepare_base_model.py
+    deps:
+    - path: config/config.yaml
+      hash: md5
+      md5: c2e2cd7e32c44ea71e9daf96dc864cf9
+      size: 740
+    - path: src/facialExpressionClassify/pipeline/stage_02_prepare_base_model.py
+      hash: md5
+      md5: 63e6e3ca57a4a59f17ec6cfb8973bb97
+      size: 966
+    params:
+      params.yaml:
+        CLASSES: 8
+        IMAGE_SIZE:
+        - 224
+        - 224
+        - 3
+        INCLUDE_TOP: false
+        LEARNING_RATE: 0.001
+        WEIGHTS: imagenet
+    outs:
+    - path: artifacts/prepare_base_model
+      hash: md5
+      md5: f0aa4ccdd60d0c1ac6c33d307f739bcc.dir
+      size: 33730120
+      nfiles: 2
