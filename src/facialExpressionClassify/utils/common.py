@@ -14,7 +14,7 @@ import base64
 
 @ensure_annotations
 def read_yaml(path_to_yaml: Path) -> ConfigBox:
-    """reads yaml file and returns
+    """Read YAML file and return
 
     Args:
         path_to_yaml (str): path like input
@@ -40,7 +40,7 @@ def read_yaml(path_to_yaml: Path) -> ConfigBox:
 
 @ensure_annotations
 def create_directories(path_to_directories: list, verbose=True):
-    """create list of directories
+    """Create list of directories
 
     Args:
         path_to_directories (list): list of path of directories
@@ -54,7 +54,7 @@ def create_directories(path_to_directories: list, verbose=True):
 
 @ensure_annotations
 def save_json(path: Path, data: dict):
-    """save json data
+    """Save JSON data
 
     Args:
         path (Path): path to json file
@@ -67,10 +67,9 @@ def save_json(path: Path, data: dict):
 
 
 
-
 @ensure_annotations
 def load_json(path: Path) -> ConfigBox:
-    """load json files data
+    """Load JSON files data
 
     Args:
         path (Path): path to json file
@@ -85,9 +84,10 @@ def load_json(path: Path) -> ConfigBox:
     return ConfigBox(content)
 
 
+
 @ensure_annotations
 def save_bin(data: Any, path: Path):
-    """save binary file
+    """Save Binary file
 
     Args:
         data (Any): data to be saved as binary
@@ -97,9 +97,10 @@ def save_bin(data: Any, path: Path):
     logger.info(f"binary file saved at: {path}")
 
 
+
 @ensure_annotations
 def load_bin(path: Path) -> Any:
-    """load binary data
+    """Load Binary data
 
     Args:
         path (Path): path to binary file
@@ -111,9 +112,11 @@ def load_bin(path: Path) -> Any:
     logger.info(f"binary file loaded from: {path}")
     return data
 
+
+
 @ensure_annotations
 def get_size(path: Path) -> str:
-    """get size in KB
+    """Get size in KB
 
     Args:
         path (Path): path of the file
@@ -125,11 +128,13 @@ def get_size(path: Path) -> str:
     return f"~ {size_in_kb} KB"
 
 
+
 def decodeImage(imgstring, fileName):
     imgdata = base64.b64decode(imgstring)
     with open(fileName, 'wb') as f:
         f.write(imgdata)
         f.close()
+
 
 
 def encodeImageIntoBase64(croppedImagePath):
