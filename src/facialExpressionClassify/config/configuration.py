@@ -125,7 +125,7 @@ class ConfigurationManager:
     def get_prediction_config(self) -> ModelPredictionConfig:
         training = self.config.training
 
-        create_directories([training.root_dir], verbose=True)
+        create_directories([training.root_dir])
 
         predict_config = ModelPredictionConfig(
             path_of_model=Path(training.trained_model_path),
