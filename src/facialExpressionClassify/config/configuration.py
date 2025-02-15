@@ -2,7 +2,9 @@ import os
 from facialExpressionClassify.constants import *
 from facialExpressionClassify import logger
 from facialExpressionClassify.utils.common import read_yaml, create_directories
-from facialExpressionClassify.entity.config_entity import DataIngestionConfig, PrepareBaseModelConfig, PrepareCallbacksConfig, ModelTrainingConfig
+from facialExpressionClassify.entity.config_entity import (
+    DataIngestionConfig, PrepareBaseModelConfig, PrepareCallbacksConfig, ModelTrainingConfig, ModelEvaluationConfig
+)
 
 
 class ConfigurationManager:
@@ -94,4 +96,26 @@ class ConfigurationManager:
         )
 
         return training_config
+    
+
+
+    def get_validation_config(self) -> ModelEvaluationConfig:
+        training = self.config.training
+        training_data = os.path.join(self.config.data_ingestion.unzip_dir, "labeled_data")
+        create_directories([
+            Path(training.root_dir)
+        ])
+
+        eval_config = ModelEvaluationConfig(
+            path_of_model=Path(training.trained_model_path),
+            training_data=Path(training_data),
+            all_params=self.params,
+            params_image_size=self.params.IMAGE_SIZE,
+            params_batch_size=self.params.BATCH_SIZE
+        )
+
+        return eval_config
+
+
+
       
