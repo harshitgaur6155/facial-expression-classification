@@ -51,7 +51,7 @@ stages:
       - src/facialExpressionClassify/pipeline/stage_04_model_evaluation.py
       - config/config.yaml
       - artifacts/data_ingestion/labeled_data
-      - artifacts/training/custom_model_3.h5
+      - artifacts/training/model.h5
     params:
       - IMAGE_SIZE
       - BATCH_SIZE
