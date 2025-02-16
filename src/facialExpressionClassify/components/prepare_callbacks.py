@@ -50,5 +50,5 @@ class PrepareCallback:
         return [
             self._create_tb_callbacks,
             self._create_ckpt_callbacks,
-            self._create_lr_scheduler_callback  # Include the LR scheduler callback
+            # self._create_lr_scheduler_callback  # Include the LR scheduler callback
         ]
