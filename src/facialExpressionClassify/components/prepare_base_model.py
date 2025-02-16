@@ -316,5 +316,3 @@ class CustomCNN:
                 if isinstance(value, tf.Tensor):
                     setattr(layer, attr, value.numpy().tolist())  # Convert tensor to list
         model.save(path)
-        
-
