@@ -6,7 +6,7 @@ import tensorflow as tf
 from facialExpressionClassify import logger
 from facialExpressionClassify.entity.config_entity import PrepareBaseModelConfig
 from tensorflow.keras.models import Sequential # type: ignore
-from tensorflow.keras.layers import Dense, Conv2D, MaxPooling2D, Flatten, Dropout, BatchNormalization
+from tensorflow.keras.layers import Dense, Conv2D, MaxPooling2D, Flatten, Dropout, BatchNormalization # type: ignore
 
 
 
@@ -265,7 +265,6 @@ class CustomCNN:
 
     
 
-    @staticmethod
     def build_custom_model(self):
 
         self.model = Sequential([
@@ -297,7 +296,7 @@ class CustomCNN:
         self.model.compile(
             optimizer=tf.keras.optimizers.Adam(learning_rate=self.config.params_learning_rate),
             loss=tf.keras.losses.CategoricalCrossentropy(),
-            metric='accuracy'
+            metrics='accuracy'
         )
 
         self.save_model(path=self.config.updated_base_model_path, model=self.model)

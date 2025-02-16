@@ -17,7 +17,7 @@ class ConfigurationManager:
         self.config = read_yaml(config_filepath)
         self.params = read_yaml(params_filepath)
         
-        create_directories([self.config.artifacts_root])
+        create_directories([self.config.artifacts_root], verbose=True)
 
 
     
@@ -40,7 +40,7 @@ class ConfigurationManager:
     def get_prepare_base_model_config(self) -> PrepareBaseModelConfig:
         config = self.config.prepare_base_model
         
-        create_directories([config.root_dir])
+        create_directories([config.root_dir], verbose=True)
 
         prepare_base_model_config = PrepareBaseModelConfig(
             root_dir=Path(config.root_dir),
@@ -64,7 +64,7 @@ class ConfigurationManager:
         create_directories([
             Path(model_ckpt_dir),
             Path(config.tensorboard_root_log_dir)
-        ])
+        ], verbose=True)
 
         prepare_callback_config = PrepareCallbacksConfig(
             root_dir=Path(config.root_dir),
@@ -84,7 +84,7 @@ class ConfigurationManager:
         training_data = self.config.data_ingestion.unzip_dir
         create_directories([
             Path(training.root_dir)
-        ])
+        ], verbose=True)
 
         training_config = ModelTrainingConfig(
             root_dir=Path(training.root_dir),
@@ -107,7 +107,7 @@ class ConfigurationManager:
         training_data = self.config.data_ingestion.unzip_dir
         create_directories([
             Path(training.root_dir)
-        ])
+        ], verbose=True)
 
         eval_config = ModelEvaluationConfig(
             path_of_model=Path(training.trained_model_path),
@@ -124,7 +124,7 @@ class ConfigurationManager:
     def get_prediction_config(self) -> ModelPredictionConfig:
         training = self.config.training
 
-        create_directories([training.root_dir])
+        create_directories([training.root_dir], verbose=True)
 
         predict_config = ModelPredictionConfig(
             path_of_model=Path(training.trained_model_path),
