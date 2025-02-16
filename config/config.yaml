@@ -100,3 +100,4 @@ prepare_callbacks:
 training:
   root_dir: /content/drive/MyDrive/Colab Notebooks/Facial Expression Classification - CNN Project/artifacts/training
   trained_model_path: /content/drive/MyDrive/Colab Notebooks/Facial Expression Classification - CNN Project/artifacts/training/custom_model_3.h5
+
