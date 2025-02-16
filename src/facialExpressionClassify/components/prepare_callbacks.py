@@ -2,6 +2,7 @@ import os
 import urllib.request as request
 from zipfile import ZipFile
 import tensorflow as tf
+from tensorflow.keras.callbacks import ReduceLROnPlateau # type: ignore
 import time
 from facialExpressionClassify.entity.config_entity import PrepareCallbacksConfig
 
@@ -32,9 +33,22 @@ class PrepareCallback:
         )
     
 
+
+    @property
+    def _create_lr_scheduler_callback(self):
+        # Implement ReduceLROnPlateau callback
+        return ReduceLROnPlateau(
+            monitor='val_loss',   # Or 'val_accuracy'
+            factor=0.1,           # Reduce LR by a factor of 0.1
+            patience=3,           # Number of epochs to wait before reducing LR
+            min_lr=1e-7           # Minimum learning rate
+        )
     
-    def get_tb_ckpt_callbacks(self):
+
+    
+    def get_tb_ckpt_lr_callbacks(self):
         return [
             self._create_tb_callbacks,
-            self._create_ckpt_callbacks
+            self._create_ckpt_callbacks,
+            self._create_lr_scheduler_callback  # Include the LR scheduler callback
         ]

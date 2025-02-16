@@ -41,6 +41,77 @@ stages:
     outs:
     - path: artifacts/prepare_base_model
       hash: md5
-      md5: f0aa4ccdd60d0c1ac6c33d307f739bcc.dir
-      size: 33730120
+      md5: 1752241783dc192b54fabd81f4bf503d.dir
+      size: 189803416
       nfiles: 2
+  model_training:
+    cmd: python src/facialExpressionClassify/pipeline/stage_03_model_training.py
+    deps:
+    - path: artifacts/data_ingestion/labeled_data
+      hash: md5
+      md5: c9716c8e10f4f7d4e669a0de7661862b.dir
+      size: 329299761
+      nfiles: 29043
+    - path: artifacts/prepare_base_model
+      hash: md5
+      md5: 1752241783dc192b54fabd81f4bf503d.dir
+      size: 189803416
+      nfiles: 2
+    - path: config/config.yaml
+      hash: md5
+      md5: c2e2cd7e32c44ea71e9daf96dc864cf9
+      size: 740
+    - path: src/facialExpressionClassify/components/prepare_callbacks.py
+      hash: md5
+      md5: 11cb19014ccc52153ae6e4ce4aad121e
+      size: 1567
+    - path: src/facialExpressionClassify/pipeline/stage_03_model_training.py
+      hash: md5
+      md5: 84e73a7491f1c5daa1ec2e4d6557c99c
+      size: 1229
+    params:
+      params.yaml:
+        AUGMENTATION: true
+        BATCH_SIZE: 16
+        EPOCHS: 20
+        IMAGE_SIZE:
+        - 224
+        - 224
+        - 3
+    outs:
+    - path: artifacts/training/model.h5
+      hash: md5
+      md5: 243e666378f664709666c39b496f54f3
+      size: 272518568
+  model_evaluation:
+    cmd: python src/facialExpressionClassify/pipeline/stage_04_model_evaluation.py
+    deps:
+    - path: artifacts/data_ingestion/labeled_data
+      hash: md5
+      md5: c9716c8e10f4f7d4e669a0de7661862b.dir
+      size: 329299761
+      nfiles: 29043
+    - path: artifacts/training/model.h5
+      hash: md5
+      md5: 243e666378f664709666c39b496f54f3
+      size: 272518568
+    - path: config/config.yaml
+      hash: md5
+      md5: c2e2cd7e32c44ea71e9daf96dc864cf9
+      size: 740
+    - path: src/facialExpressionClassify/pipeline/stage_04_model_evaluation.py
+      hash: md5
+      md5: fb99f9e951a158c6d3ada2a9dedb16e8
+      size: 841
+    params:
+      params.yaml:
+        BATCH_SIZE: 16
+        IMAGE_SIZE:
+        - 224
+        - 224
+        - 3
+    outs:
+    - path: scores.json
+      hash: md5
+      md5: 7fd74f949f3910af2d9a4fe5b03113e4
+      size: 68
