@@ -58,7 +58,7 @@ data_ingestion:
   root_dir: /content/drive/MyDrive/Colab Notebooks/Facial Expression Classification - CNN Project/artifacts/data_ingestion
   source_URL: 
   local_data_file: '/content/drive/MyDrive/Colab Notebooks/Facial Expression Classification - CNN Project/artifacts/data_ingestion/Facial Expressions Dataset.zip'
-  unzip_dir: /content/drive/MyDrive/Colab Notebooks/Facial Expression Classification - CNN Project/artifacts/data_ingestion/labeled_data
+  unzip_dir: /content/artifacts/data_ingestion/labeled_data
 
 
 ############## ----- ##############
