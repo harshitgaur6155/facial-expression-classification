@@ -68,7 +68,7 @@ class Training:
                 height_shift_range=0.1,  
                 shear_range=0.1,  
                 zoom_range=0.1,  
-                fill_mode="nearest"
+                fill_mode="nearest",
                 **datagenerator_kwargs
             )
         else:
