@@ -296,7 +296,7 @@ class CustomCNN:
         self.model.compile(
             optimizer=tf.keras.optimizers.Adam(learning_rate=self.config.params_learning_rate),
             loss=tf.keras.losses.CategoricalCrossentropy(),
-            metrics='accuracy'
+            metrics=['accuracy']
         )
 
         self.save_model(path=self.config.updated_base_model_path, model=self.model)
