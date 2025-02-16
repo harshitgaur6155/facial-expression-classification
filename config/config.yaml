@@ -1,52 +1,81 @@
-artifacts_root: artifacts
+# artifacts_root: artifacts
 
 
-data_ingestion:
-  root_dir: artifacts/data_ingestion
-  source_URL: 
-  local_data_file: 'artifacts/data_ingestion/Facial Expressions Dataset.zip'
-  unzip_dir: artifacts/data_ingestion/labeled_data
+# data_ingestion:
+#   root_dir: artifacts/data_ingestion
+#   source_URL: 
+#   local_data_file: 'artifacts/data_ingestion/Facial Expressions Dataset.zip'
+#   unzip_dir: artifacts/data_ingestion/labeled_data
+
+
+# # ############## ----- ##############
+# # # Pre-Trained Model
+
+# # prepare_base_model:
+# #   root_dir: artifacts/prepare_base_model
+# #   base_model_path: artifacts/prepare_base_model/base_model.h5
+# #   updated_base_model_path: artifacts/prepare_base_model/base_model_updated.h5
+
+
+# # prepare_callbacks:
+# #   root_dir: artifacts/prepare_callbacks
+# #   tensorboard_root_log_dir: artifacts/prepare_callbacks/tensorboard_log_dir
+# #   checkpoint_model_filepath: artifacts/prepare_callbacks/checkpoint_dir/model.h5
+
+
+# # training:
+# #   root_dir: artifacts/training
+# #   trained_model_path: artifacts/training/model.h5
+# # ############## ----- ##############
+
 
 
 # ############## ----- ##############
-# # Pre-Trained Model
+# # Custom Model - 1
 
 # prepare_base_model:
 #   root_dir: artifacts/prepare_base_model
-#   base_model_path: artifacts/prepare_base_model/base_model.h5
-#   updated_base_model_path: artifacts/prepare_base_model/base_model_updated.h5
+#   base_model_path: artifacts/prepare_base_model/custom_model_1_base.h5
+#   updated_base_model_path: artifacts/prepare_base_model/custom_model_1.h5
 
 
 # prepare_callbacks:
 #   root_dir: artifacts/prepare_callbacks
 #   tensorboard_root_log_dir: artifacts/prepare_callbacks/tensorboard_log_dir
-#   checkpoint_model_filepath: artifacts/prepare_callbacks/checkpoint_dir/model.h5
+#   checkpoint_model_filepath: artifacts/prepare_callbacks/checkpoint_dir/custom_model_1.h5
 
 
 # training:
 #   root_dir: artifacts/training
-#   trained_model_path: artifacts/training/model.h5
+#   trained_model_path: artifacts/training/custom_model_1.h5
 # ############## ----- ##############
+  
 
+
+artifacts_root: /content/drive/MyDrive/Colab Notebooks/Facial Expression Classification - CNN Project/artifacts
+
+data_ingestion:
+  root_dir: /content/drive/MyDrive/Colab Notebooks/Facial Expression Classification - CNN Project/artifacts/data_ingestion
+  source_URL: 
+  local_data_file: '/content/drive/MyDrive/Colab Notebooks/Facial Expression Classification - CNN Project/artifacts/data_ingestion/Facial Expressions Dataset.zip'
+  unzip_dir: /content/drive/MyDrive/Colab Notebooks/Facial Expression Classification - CNN Project/artifacts/data_ingestion/labeled_data
 
 
 ############## ----- ##############
-# Custom Model - 1
+# Custom Model - 2 (Google Colab)
 
 prepare_base_model:
-  root_dir: artifacts/prepare_base_model
-  base_model_path: artifacts/prepare_base_model/custom_model_1_base.h5
-  updated_base_model_path: artifacts/prepare_base_model/custom_model_1.h5
+  root_dir: /content/drive/MyDrive/Colab Notebooks/Facial Expression Classification - CNN Project/artifacts/prepare_base_model
+  base_model_path: /content/drive/MyDrive/Colab Notebooks/Facial Expression Classification - CNN Project/artifacts/prepare_base_model/custom_model_2_base.h5
+  updated_base_model_path: /content/drive/MyDrive/Colab Notebooks/Facial Expression Classification - CNN Project/artifacts/prepare_base_model/custom_model_2.h5
 
 
 prepare_callbacks:
-  root_dir: artifacts/prepare_callbacks
-  tensorboard_root_log_dir: artifacts/prepare_callbacks/tensorboard_log_dir
-  checkpoint_model_filepath: artifacts/prepare_callbacks/checkpoint_dir/custom_model_1.h5
+  root_dir: /content/drive/MyDrive/Colab Notebooks/Facial Expression Classification - CNN Project/artifacts/prepare_callbacks
+  tensorboard_root_log_dir: /content/drive/MyDrive/Colab Notebooks/Facial Expression Classification - CNN Project/artifacts/prepare_callbacks/tensorboard_log_dir
+  checkpoint_model_filepath: /content/drive/MyDrive/Colab Notebooks/Facial Expression Classification - CNN Project/artifacts/prepare_callbacks/checkpoint_dir/custom_model_2.h5
 
 
 training:
-  root_dir: artifacts/training
-  trained_model_path: artifacts/training/custom_model_1.h5
-############## ----- ##############
-  
+  root_dir: /content/drive/MyDrive/Colab Notebooks/Facial Expression Classification - CNN Project/artifacts/training
+  trained_model_path: /content/drive/MyDrive/Colab Notebooks/Facial Expression Classification - CNN Project/artifacts/training/custom_model_2.h5
