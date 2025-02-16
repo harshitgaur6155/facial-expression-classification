@@ -23,8 +23,8 @@ class Training:
             self.config.updated_base_model_path
         )
     
-
-
+    
+    
     def train_valid_generator(self):
 
         datagenerator_kwargs = dict(
@@ -53,12 +53,22 @@ class Training:
 
         if self.config.params_is_augmentation:
             train_datagenerator = tf.keras.preprocessing.image.ImageDataGenerator(
-                rotation_range=40,
+                # rotation_range=40,
+                # horizontal_flip=True,
+                # width_shift_range=0.2,
+                # height_shift_range=0.2,
+                # shear_range=0.2,
+                # zoom_range=0.2,
+                # **datagenerator_kwargs
+
+                
+                rotation_range=15,  # Reduced
                 horizontal_flip=True,
-                width_shift_range=0.2,
-                height_shift_range=0.2,
-                shear_range=0.2,
-                zoom_range=0.2,
+                width_shift_range=0.1,  
+                height_shift_range=0.1,  
+                shear_range=0.1,  
+                zoom_range=0.1,  
+                fill_mode="nearest"
                 **datagenerator_kwargs
             )
         else:
