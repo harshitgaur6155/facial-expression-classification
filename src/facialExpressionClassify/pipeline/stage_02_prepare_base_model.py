@@ -1,6 +1,6 @@
 from facialExpressionClassify import logger
 from facialExpressionClassify.config.configuration import ConfigurationManager
-from facialExpressionClassify.components.prepare_base_model import PrepareBaseModel, CustomCNN
+from facialExpressionClassify.components.prepare_base_model import PrepareBaseModel
 
 
 
@@ -15,11 +15,9 @@ class PrepareBaseModelTrainingPipeline:
         prepare_base_model_config = config.get_prepare_base_model_config()
 
         # Calls Pre-Trained Model class
-        # prepare_base_model = PrepareBaseModel(config=prepare_base_model_config)
-
-        # Calls Custom Built Model class
-        prepare_base_model = CustomCNN(config=prepare_base_model_config)
-        prepare_base_model.build_custom_model()
+        prepare_base_model = PrepareBaseModel(config=prepare_base_model_config)
+        prepare_base_model.get_base_model()
+        prepare_base_model.update_base_model()
 
 
 
