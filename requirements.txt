@@ -4,7 +4,7 @@
 # tensorflow-metal
 
 #### General & Google Colab
-tensorflow
+tensorflow==2.12.0
 
 ## Generic
 pandas
