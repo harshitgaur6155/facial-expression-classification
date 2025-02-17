@@ -269,31 +269,85 @@ class CustomCNN:
 
     def build_custom_model(self):
 
-        ##### Basic Custom CNN Model
+        # ##### Basic Custom CNN Model
+
+        # self.model = Sequential([
+            
+        #     # First Convolutional Layer
+        #     Conv2D(32, (3,3), activation='relu', padding='same', input_shape=self.config.params_image_size),
+        #     BatchNormalization(),
+        #     MaxPooling2D((2,2)),
+
+        #     # Second Convolutional Layer
+        #     Conv2D(64, (3,3), activation='relu', padding='same'),
+        #     BatchNormalization(),
+        #     MaxPooling2D((2,2)),
+
+        #     # Third Convolutional Layer
+        #     Conv2D(128, (3,3), activation='relu', padding='same'),
+        #     BatchNormalization(),
+        #     MaxPooling2D((2,2)),
+        #     Dropout(0.3),
+
+        #     # Fully Connected Layer
+        #     Flatten(),
+        #     Dense(256, activation='relu'),
+        #     BatchNormalization(),
+        #     Dropout(0.5),
+        #     Dense(self.config.params_classes, activation='softmax')
+        # ])
+
+        # self.model.compile(
+        #     optimizer=tf.keras.optimizers.Adam(learning_rate=self.config.params_learning_rate),
+        #     loss=tf.keras.losses.CategoricalCrossentropy(),
+        #     metrics='accuracy'
+        # )
+
+
+        ##### More Depth Custom CNN Model
 
         self.model = Sequential([
             
-            # First Convolutional Layer
-            Conv2D(32, (3,3), activation='relu', padding='same', input_shape=self.config.params_image_size),
+            # First Convolutional Block
+            Conv2D(32, (5,5), activation='relu', padding='same', input_shape=self.config.params_image_size),
+            BatchNormalization(),
+            Conv2D(32, (3,3), activation='relu', padding='same'),
             BatchNormalization(),
             MaxPooling2D((2,2)),
 
-            # Second Convolutional Layer
+            # Second Convolutional Block
+            Conv2D(64, (5, 5), activation='relu', padding='same'),
+            BatchNormalization(),
             Conv2D(64, (3,3), activation='relu', padding='same'),
-            BatchNormalization(),
-            MaxPooling2D((2,2)),
-
-            # Third Convolutional Layer
-            Conv2D(128, (3,3), activation='relu', padding='same'),
             BatchNormalization(),
             MaxPooling2D((2,2)),
             Dropout(0.3),
 
-            # Fully Connected Layer
-            Flatten(),
+            # Third Convolutional Block
+            Conv2D(128, (3,3), activation='relu', padding='same'),
+            BatchNormalization(),
+            SeparableConv2D(128, (3,3), activation='relu', padding='same'),  # Efficient alternative
+            BatchNormalization(),
+            MaxPooling2D((2,2)),
+            Dropout(0.4),
+
+            # Fully Connected Layers
+            GlobalAveragePooling2D(),  # More efficient than Flatten()
             Dense(256, activation='relu'),
             BatchNormalization(),
             Dropout(0.5),
+
+            # # Flatten and Fully Connected Layers
+            # Flatten(),
+            # Dense(256, activation='relu'),
+            # BatchNormalization(),
+            # Dropout(0.5),
+            
+            Dense(128, activation='relu'),
+            BatchNormalization(),
+            Dropout(0.4),
+
+            # Output layer
             Dense(self.config.params_classes, activation='softmax')
         ])
 
