@@ -2,7 +2,7 @@ import os
 import urllib.request as request
 from zipfile import ZipFile
 import tensorflow as tf
-from tensorflow.keras.callbacks import ReduceLROnPlateau # type: ignore
+from tensorflow.keras.callbacks import ReduceLROnPlateau, EarlyStopping, LearningRateScheduler # type: ignore
 import time
 from facialExpressionClassify.entity.config_entity import PrepareCallbacksConfig
 
@@ -35,7 +35,7 @@ class PrepareCallback:
 
 
     @property
-    def _create_lr_scheduler_callback(self):
+    def _create_lr_scheduler_reducePlateau_callback(self):
         # Implement ReduceLROnPlateau callback
         return ReduceLROnPlateau(
             monitor='val_loss',   # Or 'val_accuracy'
@@ -45,10 +45,33 @@ class PrepareCallback:
         )
     
 
+
+    @property
+    def _create_lr_scheduler_earlyStopping_callback(self):
+        # 🔹 Stop training if no improvement
+        return EarlyStopping(
+            monitor='val_loss',
+            patience=5,  # Stop if val_loss doesn’t improve for 5 epochs
+            restore_best_weights=True,
+            verbose=1
+        )
     
+
+    
+    def _create_lr_scheduler_expDecay_callback(self, epoch, lr):
+        # 🔹 Exponential Decay for LR (Optional)
+        decay_rate = 0.1
+        return lr * tf.math.exp(-decay_rate * epoch)
+
+
+
     def get_tb_ckpt_lr_callbacks(self):
+        lr_scheduler = LearningRateScheduler(self._create_lr_scheduler_expDecay_callback)
+
         return [
             self._create_tb_callbacks,
             self._create_ckpt_callbacks,
-            # self._create_lr_scheduler_callback  # Include the LR scheduler callback
+            self._create_lr_scheduler_reducePlateau_callback,
+            self._create_lr_scheduler_earlyStopping_callback,
+            lr_scheduler  # Now correctly using the exponential decay scheduler
         ]

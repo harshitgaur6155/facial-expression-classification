@@ -5,8 +5,8 @@ stages:
     deps:
     - path: config/config.yaml
       hash: md5
-      md5: 01e977767a21ba51c156b56cce5e1d65
-      size: 1491
+      md5: be5fa051a846056ae8c1a1a83b2f6f8f
+      size: 3975
     - path: src/facialExpressionClassify/pipeline/stage_01_data_ingestion.py
       hash: md5
       md5: 0b0e945dd9d00cf2490c6710abdb1e74
@@ -22,8 +22,8 @@ stages:
     deps:
     - path: config/config.yaml
       hash: md5
-      md5: 01e977767a21ba51c156b56cce5e1d65
-      size: 1491
+      md5: be5fa051a846056ae8c1a1a83b2f6f8f
+      size: 3975
     - path: src/facialExpressionClassify/pipeline/stage_02_prepare_base_model.py
       hash: md5
       md5: 1820e0407e885d0c751a389e402cf0ab
@@ -41,9 +41,9 @@ stages:
     outs:
     - path: artifacts/prepare_base_model
       hash: md5
-      md5: 732cb3b73638961c02c00a3b6ae1c9a4.dir
-      size: 396212332
-      nfiles: 5
+      md5: acd1f57502446d7a861606194c309c97.dir
+      size: 500359740
+      nfiles: 6
   model_training:
     cmd: python src/facialExpressionClassify/pipeline/stage_03_model_training.py
     deps:

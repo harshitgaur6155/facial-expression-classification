@@ -6,7 +6,9 @@ import tensorflow as tf
 from facialExpressionClassify import logger
 from facialExpressionClassify.entity.config_entity import PrepareBaseModelConfig
 from tensorflow.keras.models import Sequential # type: ignore
-from tensorflow.keras.layers import Dense, Conv2D, MaxPooling2D, Flatten, Dropout, BatchNormalization # type: ignore
+from tensorflow.keras.layers import ( # type: ignore
+    Dense, Conv2D, MaxPooling2D, Flatten, Dropout, BatchNormalization, SeparableConv2D, GlobalAveragePooling2D
+)
 
 
 
@@ -307,14 +309,14 @@ class CustomCNN:
         self.model = Sequential([
             
             # First Convolutional Block
-            Conv2D(32, (3,3), activation='relu', padding='same', input_shape=self.config.params_image_size),
+            Conv2D(32, (5,5), activation='relu', padding='same', input_shape=self.config.params_image_size),
             BatchNormalization(),
             Conv2D(32, (3,3), activation='relu', padding='same'),
             BatchNormalization(),
             MaxPooling2D((2,2)),
 
             # Second Convolutional Block
-            Conv2D(64, (3,3), activation='relu', padding='same'),
+            Conv2D(64, (5, 5), activation='relu', padding='same'),
             BatchNormalization(),
             Conv2D(64, (3,3), activation='relu', padding='same'),
             BatchNormalization(),
@@ -324,16 +326,22 @@ class CustomCNN:
             # Third Convolutional Block
             Conv2D(128, (3,3), activation='relu', padding='same'),
             BatchNormalization(),
-            Conv2D(128, (3,3), activation='relu', padding='same'),
+            SeparableConv2D(128, (3,3), activation='relu', padding='same'),  # Efficient alternative
             BatchNormalization(),
             MaxPooling2D((2,2)),
             Dropout(0.4),
 
-            # Flatten and Fully Connected Layers
-            Flatten(),
+            # Fully Connected Layers
+            GlobalAveragePooling2D(),  # More efficient than Flatten()
             Dense(256, activation='relu'),
             BatchNormalization(),
             Dropout(0.5),
+
+            # # Flatten and Fully Connected Layers
+            # Flatten(),
+            # Dense(256, activation='relu'),
+            # BatchNormalization(),
+            # Dropout(0.5),
             
             Dense(128, activation='relu'),
             BatchNormalization(),
