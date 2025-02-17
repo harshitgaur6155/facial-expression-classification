@@ -1,7 +1,7 @@
 AUGMENTATION: True
 
 IMAGE_SIZE: [224, 224, 3] # as per VGG 16 model
-BATCH_SIZE: 16
+BATCH_SIZE: 32
 
 INCLUDE_TOP: False
 
