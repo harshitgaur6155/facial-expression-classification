@@ -9,7 +9,7 @@ from facialExpressionClassify.entity.config_entity import ModelTrainingConfig
 import collections
 import numpy as np
 from sklearn.utils.class_weight import compute_class_weight # type: ignore
-# tf.config.run_functions_eagerly(True)
+tf.config.run_functions_eagerly(True)
 
 
 
@@ -22,6 +22,13 @@ class Training:
     def get_base_model(self):
         self.model = tf.keras.models.load_model(
             self.config.updated_base_model_path
+        )
+
+        # Recreate the optimizer after loading the model
+        self.model.compile(
+            optimizer=tf.keras.optimizers.Adam(learning_rate=self.config.params_learning_rate),
+            loss=tf.keras.losses.CategoricalCrossentropy(),
+            metrics=['accuracy']
         )
     
     
