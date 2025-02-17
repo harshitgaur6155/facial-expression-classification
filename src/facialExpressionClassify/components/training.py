@@ -9,7 +9,7 @@ from facialExpressionClassify.entity.config_entity import ModelTrainingConfig
 import collections
 import numpy as np
 from sklearn.utils.class_weight import compute_class_weight # type: ignore
-tf.config.run_functions_eagerly(True)
+# tf.config.run_functions_eagerly(True)
 
 
 
