@@ -66,12 +66,12 @@ class PrepareCallback:
 
 
     def get_tb_ckpt_lr_callbacks(self):
-        lr_scheduler = LearningRateScheduler(self._create_lr_scheduler_expDecay_callback)
+        # lr_scheduler = LearningRateScheduler(self._create_lr_scheduler_expDecay_callback)
 
         return [
             self._create_tb_callbacks,
             self._create_ckpt_callbacks,
             self._create_lr_scheduler_reducePlateau_callback,
             self._create_lr_scheduler_earlyStopping_callback,
-            lr_scheduler  # Now correctly using the exponential decay scheduler
+            # lr_scheduler  # Now correctly using the exponential decay scheduler
         ]
