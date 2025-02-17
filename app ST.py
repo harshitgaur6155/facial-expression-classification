@@ -11,17 +11,14 @@ class ClientApp:
         self.classifier = None
 
     def classify_image(self, uploaded_file):
+        pil_image = Image.open(uploaded_file)
+        self.filename = "inputImage.jpg"
+        pil_image.save(self.filename)
+        
+        self.classifier = PredictionPipeline(self.filename)
+        result = self.classifier.streamlit_predict()
+        return result
 
-            pil_image = Image.open(uploaded_file)
-            self.filename = "inputImage.jpg"
-            pil_image.save(self.filename)
-            
-            self.classifier = PredictionPipeline(self.filename)
-
-            result = self.classifier.streamlit_predict()
-            return result
-
-    
 
 # Set up the page layout
 st.set_page_config(page_title="Facial Expression Classification", layout="centered")
@@ -101,13 +98,11 @@ st.markdown("""
         }
 
         .prediction-result {
-            display: none;
             font-size: 1.5rem;
             margin-top: 30px;
         }
 
         .gif-container {
-            display: none;
             margin-top: 20px;
         }
 
@@ -124,37 +119,58 @@ st.markdown("""
 # Title and Upload Section
 st.markdown('<h3>What’s Your Mood? Upload Your Image for a Quick Mood Check!</h3>', unsafe_allow_html=True)
 
+# Image upload button
 uploaded_file = st.file_uploader("Choose an Image...", type=["jpg", "png", "jpeg"])
 
-# Display uploaded image
+# If an image is uploaded, display it in a neat layout
 if uploaded_file is not None:
-    img = Image.open(uploaded_file)
-    st.image(img, caption="Uploaded Image", use_container_width=True)
+    # Create a container for the layout
+    with st.container():
+        # Adjusted column widths: Left column will be larger for the image, right column will be wider for the result and GIF
+        col1, col2, col3 = st.columns([2, 3, 3])
 
-    # Show loading spinner
-    with st.spinner("Processing..."):
+        # Left column: Upload image preview (Adjusted size)
+        with col1:
+            img = Image.open(uploaded_file)
+            st.image(img, caption="Uploaded Image", use_container_width=True, width=500)  # Limit width to 500px
+            st.markdown('<div style="height: 40px; center"></div>', unsafe_allow_html=True)  # Add some space below the image for better centering
 
-        # Initialize the ClientApp
-        clApp = ClientApp()
 
-        # Get the classification result from the classifier
-        result = clApp.classify_image(uploaded_file)
-        
-        # Display the prediction result
-        st.markdown(f"### Predicted Expression: {result.capitalize()}", unsafe_allow_html=True)
+        # Right column: Result and GIF
+        with col2:
+            # Top row: Display the result of prediction
+            with st.container():
+                # Show loading spinner and process the image
+                with st.spinner("Processing..."):
+                    # Initialize the ClientApp
+                    clApp = ClientApp()
 
-        # GIF based on prediction result
-        gifs = {
-            "anger": "anger.gif",
-            "contempt": "contempt.gif",
-            "disgust": "disgust.gif",
-            "fear": "fear.gif",
-            "happy": "happy.gif",
-            "neutral": "neutral.gif",
-            "sad": "sad.gif",
-            "surprise": "surprise.gif"
-        }
+                    # Get the classification result from the classifier
+                    result = clApp.classify_image(uploaded_file)
 
-        # Find the corresponding GIF for the result
-        gif_path = f"static/{gifs.get(result, 'neutral.gif')}"
-        st.image(gif_path, use_container_width=True)
+                    # Show the prediction result
+                    st.markdown(f"### Predicted Expression: {result.capitalize()}", unsafe_allow_html=True)
+
+        # Right column: Result and GIF
+        with col3:
+            # Bottom row: Display the corresponding GIF
+            with st.container():
+                gifs = {
+                    "anger": "anger.gif",
+                    "contempt": "contempt.gif",
+                    "disgust": "disgust.gif",
+                    "fear": "fear.gif",
+                    "happy": "happy.gif",
+                    "neutral": "neutral.gif",
+                    "sad": "sad.gif",
+                    "surprise": "surprise.gif"
+                }
+
+                # Find the corresponding GIF for the result
+                gif_path = f"static/{gifs.get(result, 'neutral.gif')}"
+                st.image(gif_path, use_container_width=True)
+                st.markdown('<div style="height: 80px; center"></div>', unsafe_allow_html=True)  # Add some space below the image for better centering
+
+else:
+    st.markdown('<div style="color: #c0c0c0; text-align: center; margin-top: 20px;">'
+                'Upload an image to get a quick mood check!</div>', unsafe_allow_html=True)
