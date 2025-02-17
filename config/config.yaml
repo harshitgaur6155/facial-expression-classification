@@ -3,7 +3,7 @@ artifacts_root: artifacts
 
 data_ingestion:
   root_dir: artifacts/data_ingestion
-  source_URL: https://drive.google.com/file/d/1ttjaVxePnhr8mQm3rllKlGnhHQrmIVT-/view?usp=sharing
+  source_URL: 
   local_data_file: 'artifacts/data_ingestion/Facial Expressions Dataset.zip'
   unzip_dir: artifacts/data_ingestion/labeled_data
 
