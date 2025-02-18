@@ -19,7 +19,7 @@ class DataIngestion:
                 url = self.config.source_URL,
                 filename = self.config.local_data_file
             )
-            logger.info(f"{filename} download! with following info: \n{headers}")
+            logger.info(f"{filename} downloaded! with following info: \n{headers}")
         else:
             logger.info(f"File already exists of size: {get_size(Path(self.config.local_data_file))}")
 
@@ -32,7 +32,16 @@ class DataIngestion:
         Extracts the zip file into the data directory
         Function returns None
         """
+        # unzip_path = self.config.unzip_dir
+        # os.makedirs(unzip_path, exist_ok=True)
+        # with zipfile.ZipFile(self.config.local_data_file, 'r') as zip_ref:
+        #     zip_ref.extractall(unzip_path)
+
         unzip_path = self.config.unzip_dir
         os.makedirs(unzip_path, exist_ok=True)
+
         with zipfile.ZipFile(self.config.local_data_file, 'r') as zip_ref:
-            zip_ref.extractall(unzip_path)
+            for file_info in zip_ref.infolist():
+                # Skip the __MACOSX folder
+                if "__MACOSX" not in file_info.filename:
+                    zip_ref.extract(file_info, unzip_path)

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Facial Expression Classification</title>
+    <link rel="shortcut icon" href="data:image/png;base64,..."/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Global Styles */
+        body {
+            /* background: url('https://img.freepik.com/free-photo/abstract-uv-ultraviolet-light-composition_23-2149243965.jpg?t=st=1739676960~exp=1739680560~hmac=786e0e7f3d58fb8d6cf6035bd6c39aa3c83c0e5e97043f72ba0a2ceb5fea0305&w=2000') no-repeat center center fixed; */
+            background: url('/static/abstract-uv-ultraviolet-light-composition_23-2149243965.jpg?t=st=1739676960~exp=1739680560~hmac=786e0e7f3d58fb8d6cf6035bd6c39aa3c83c0e5e97043f72ba0a2ceb5fea0305&w=2000') no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+        }
+
+        h3 {
+            font-size: 2.2rem;
+            text-align: center;
+            margin-bottom: 40px;
+            font-weight: bold;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.6);
+            animation: fadeIn 2s ease-in-out;
+            background: -webkit-linear-gradient(45deg, #00bfff, #ff007f);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        .main-card {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(15px);
+            border-radius: 25px;
+            padding: 40px;
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.4);
+            text-align: center;
+            animation: slideUp 0.6s ease-out;
+            width: 100%;
+            max-width: 900px;
+        }
+
+        @keyframes slideUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .img-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .image-box {
+            width: 250px;
+            height: 250px;
+            background-color: rgba(0, 0, 0, 0.8);
+            border-radius: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .image-box:hover {
+            transform: scale(1.05);
+        }
+
+        .image-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .btn-upload {
+            background: linear-gradient(45deg, #00bfff, #ff007f);
+            border: none;
+            padding: 15px;
+            color: white;
+            font-size: 1.2rem;
+            border-radius: 20px;
+            cursor: pointer;
+            width: 80%;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .btn-upload:hover {
+            background: linear-gradient(45deg, #007b9f, #e40062);
+            transform: scale(1.05);
+        }
+
+        /* Loading Indicator */
+        .loading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            visibility: hidden;
+            font-size: 1.5rem;
+            color: white;
+            font-weight: bold;
+        }
+
+        .loading.show {
+            visibility: visible;
+        }
+
+        /* Prediction Result */
+        .prediction-result {
+            display: none;
+            font-size: 1.5rem;
+            margin-top: 30px;
+            animation: fadeIn 1s ease-out;
+        }
+
+        /* GIF Display */
+        .gif-container {
+            display: none;
+            margin-top: 20px;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .gif-container img {
+            max-width: 100%;
+            height: auto;
+            max-height: 230px;
+            object-fit: contain;
+            border-radius: 15px;
+            opacity: 0;
+            animation: fadeIn 1.5s ease-in-out forwards;
+        }
+
+        /* Expression Colors */
+        .happy {
+            color: #ffd700; /* Bright Yellow for happy */
+        }
+
+        .sad {
+            color: #1e90ff; /* Deep Blue for sad */
+        }
+
+        .angry {
+            color: #ff4500; /* Orange-Red for angry */
+        }
+
+        .neutral {
+            color: #808080; /* Gray for neutral */
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-card {
+                padding: 25px;
+            }
+            .image-box {
+                width: 200px;
+                height: 200px;
+            }
+            .btn-upload {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-card">
+    <!-- <h3>What’s Your Mood? Upload Your Image for a Quick Mood Check!</h3> -->
+    <h3 style="color: #c0c0c0; font-family: 'Montserrat', sans-serif; font-weight: 600; text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3), 0 0 15px rgba(255, 100, 150, 0.4);">
+        What’s Your Mood? <br>
+        Upload Your Image for a Quick Mood Check!
+    </h3>
+    <div class="img-container">
+        <div class="image-box" id="image-box">
+            <img src="" id="uploaded-img" alt="Uploaded Image">
+        </div>
+        <button class="btn-upload" id="upload-btn">
+            <i class="fas fa-upload"></i> Upload Image
+        </button>
+        <input type="file" id="file-input" style="display: none;" accept="image/*">
+    </div>
+
+    <div class="loading" id="loading">Processing...</div>
+
+    <div class="prediction-result" id="result">
+        <p id="result-text"></p>
+    </div>
+
+    <div class="gif-container" id="gif-container">
+        <img id="reaction-gif" src="" alt="Reaction GIF">
+    </div>
+</div>
+
+<script>
+    document.getElementById("upload-btn").addEventListener("click", function() {
+        document.getElementById("file-input").click();
+    });
+
+    document.getElementById("file-input").addEventListener("change", function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const imgElement = document.getElementById("uploaded-img");
+                imgElement.src = e.target.result;
+                imgElement.style.opacity = 1;
+                document.getElementById("result").style.display = 'none';
+                document.getElementById("gif-container").style.display = 'none';
+                document.getElementById("loading").classList.add('show');
+                
+                // Send the image data to the Flask app
+                fetch('/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ image: e.target.result.split(',')[1] })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("loading").classList.remove('show');
+                    const prediction = data[0].image;
+                    document.getElementById("result-text").textContent = `Predicted Expression: ${prediction}`;
+                    document.getElementById("result").style.display = 'block';
+
+                    // Display appropriate GIF based on prediction
+                    const gifs = {
+                        "anger": "anger.gif",
+                        "contempt": "contempt.gif",
+                        "disgust": "disgust.gif",
+                        "fear": "fear.gif",
+                        "happy": "happy.gif",
+                        "neutral": "neutral.gif",
+                        "sad": "sad.gif",
+                        "surprise": "surprise.gif"
+                    };
+
+                    document.getElementById("reaction-gif").src = `/static/${gifs[prediction]}`;
+                    document.getElementById("gif-container").style.display = 'block';
+
+                    // Change text color based on prediction
+                    document.getElementById("result-text").className = prediction;
+                });
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+</script>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

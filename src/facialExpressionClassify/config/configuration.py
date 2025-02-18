@@ -1,21 +1,23 @@
+import os
 from facialExpressionClassify.constants import *
 from facialExpressionClassify import logger
 from facialExpressionClassify.utils.common import read_yaml, create_directories
-from facialExpressionClassify.entity.config_entity import DataIngestionConfig
+from facialExpressionClassify.entity.config_entity import (
+    DataIngestionConfig, PrepareBaseModelConfig, PrepareCallbacksConfig, ModelTrainingConfig, ModelEvaluationConfig, ModelPredictionConfig
+)
 
 
 class ConfigurationManager:
     def __init__(
-        self,
-        config_filepath = CONFIG_FILE_PATH,
-        params_filepath = PARAMS_FILE_PATH):
+            self,
+            config_filepath = CONFIG_FILE_PATH,
+            params_filepath = PARAMS_FILE_PATH
+        ):
 
         self.config = read_yaml(config_filepath)
-        logger.info(self.config)
         self.params = read_yaml(params_filepath)
-        logger.info(self.params)
-
-        create_directories([self.config.artifacts_root])
+        
+        create_directories([self.config.artifacts_root], verbose=True)
 
 
     
@@ -32,4 +34,101 @@ class ConfigurationManager:
         )
 
         return data_ingestion_config
-      
+    
+
+
+    def get_prepare_base_model_config(self) -> PrepareBaseModelConfig:
+        config = self.config.prepare_base_model
+        
+        create_directories([config.root_dir], verbose=True)
+
+        prepare_base_model_config = PrepareBaseModelConfig(
+            root_dir=Path(config.root_dir),
+            base_model_path=Path(config.base_model_path),
+            updated_base_model_path=Path(config.updated_base_model_path),
+            params_image_size=self.params.IMAGE_SIZE,
+            params_learning_rate=self.params.LEARNING_RATE,
+            params_include_top=self.params.INCLUDE_TOP,
+            params_weights=self.params.WEIGHTS,
+            params_classes=self.params.CLASSES,
+            freeze_layers_till=self.params.FREEZE_LAYERS_TILL,
+        )
+
+        return prepare_base_model_config
+    
+
+
+    def get_prepare_callback_config(self) -> PrepareCallbacksConfig:
+        config = self.config.prepare_callbacks
+        model_ckpt_dir = os.path.dirname(config.checkpoint_model_filepath)
+        create_directories([
+            Path(model_ckpt_dir),
+            Path(config.tensorboard_root_log_dir)
+        ], verbose=True)
+
+        prepare_callback_config = PrepareCallbacksConfig(
+            root_dir=Path(config.root_dir),
+            tensorboard_root_log_dir=Path(config.tensorboard_root_log_dir),
+            checkpoint_model_filepath=Path(config.checkpoint_model_filepath)
+        )
+
+        return prepare_callback_config
+    
+
+
+    def get_training_config(self) -> ModelTrainingConfig:
+        training = self.config.training
+        prepare_base_model = self.config.prepare_base_model
+        params = self.params
+        # training_data = os.path.join(self.config.data_ingestion.unzip_dir, self.config.data_ingestion.train_test_data)
+        training_data = self.config.data_ingestion.unzip_dir
+        create_directories([
+            Path(training.root_dir)
+        ], verbose=True)
+
+        training_config = ModelTrainingConfig(
+            root_dir=Path(training.root_dir),
+            trained_model_path=Path(training.trained_model_path),
+            updated_base_model_path=Path(prepare_base_model.updated_base_model_path),
+            training_data=Path(training_data),
+            params_learning_rate=params.LEARNING_RATE,
+            params_epochs=params.EPOCHS,
+            params_batch_size=params.BATCH_SIZE,
+            params_is_augmentation=params.AUGMENTATION,
+            params_image_size=params.IMAGE_SIZE
+        )
+
+        return training_config
+    
+
+
+    def get_validation_config(self) -> ModelEvaluationConfig:
+        training = self.config.training
+        # training_data = os.path.join(self.config.data_ingestion.unzip_dir, self.config.data_ingestion.train_test_data)
+        training_data = self.config.data_ingestion.unzip_dir
+        create_directories([
+            Path(training.root_dir)
+        ], verbose=True)
+
+        eval_config = ModelEvaluationConfig(
+            path_of_model=Path(training.trained_model_path),
+            training_data=Path(training_data),
+            all_params=self.params,
+            params_image_size=self.params.IMAGE_SIZE,
+            params_batch_size=self.params.BATCH_SIZE
+        )
+
+        return eval_config
+
+
+
+    def get_prediction_config(self) -> ModelPredictionConfig:
+        training = self.config.training
+
+        create_directories([training.root_dir])
+
+        predict_config = ModelPredictionConfig(
+            path_of_model=Path(training.trained_model_path),
+        )
+
+        return predict_config
