@@ -25,4 +25,5 @@ scipy
 Flask
 Flask-Cors
 streamlit
+tflite-runtime
 -e .
