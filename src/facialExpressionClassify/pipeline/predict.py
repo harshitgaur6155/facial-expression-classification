@@ -24,18 +24,18 @@ class PredictionPipeline:
 
 
         # Load model (When Model is stored)
-        model_path = Path(self.config.training.trained_model_path)
+        model_path = Path('model/quantized_model.tflite')
 
 
-        # # Download model file from Hugging Face
-        model_url = "https://huggingface.co/harshitgaur6155/facial-expression-classification/resolve/main/custom_model_1.tflite"
+        # # # Download model file from Hugging Face
+        # model_url = "https://huggingface.co/harshitgaur6155/facial-expression-classification/resolve/main/custom_model_1.tflite"
 
-        # Download the model file
-        response = requests.get(model_url)
-        if response.status_code == 200:
-            # Save the content to a local file
-            with open(model_path, 'wb') as f:
-                f.write(response.content)
+        # # Download the model file
+        # response = requests.get(model_url)
+        # if response.status_code == 200:
+        #     # Save the content to a local file
+        #     with open(model_path, 'wb') as f:
+        #         f.write(response.content)
 
         
         # self.model = tf.keras.models.load_model(model_path)
