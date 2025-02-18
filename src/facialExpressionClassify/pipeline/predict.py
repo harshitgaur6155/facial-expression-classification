@@ -1,11 +1,15 @@
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras.preprocessing import image # type: ignore
+
+# from transformers import cached_path # type: ignore
+import requests
+from io import BytesIO
+
 import os
 from facialExpressionClassify import logger
 from facialExpressionClassify.constants import *
 from facialExpressionClassify.utils.common import read_yaml
-
 
 
 
@@ -14,8 +18,22 @@ class PredictionPipeline:
         self.filename = filename
         self.config = read_yaml(config_filepath)
 
-        # Load model
+
+        # Load model (When Model is stored)
         model_path = Path(self.config.training.trained_model_path)
+
+
+        # Download model file from Hugging Face
+        model_url = "https://huggingface.co/harshitgaur6155/facial-expression-classification/resolve/main/custom_model_1.h5"
+
+        # Download the model file
+        response = requests.get(model_url)
+        if response.status_code == 200:
+            # Save the content to a local file
+            with open(model_path, 'wb') as f:
+                f.write(response.content)
+
+        
         self.model = tf.keras.models.load_model(model_path)
 
         
